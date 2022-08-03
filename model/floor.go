@@ -67,6 +67,8 @@ func GetFloorByID(floorId int) Floor {
 	// rows := migration.DbPool.QueryRow(context.Background(), "select floors.id, floors.name, floors.total_workspace, floors.building_id, buildings.name as building_name, floors.created_at, floors.updated_at from floors LEFT JOIN buildings ON floors.building_id = buildings.id where floors.id = $1", floorId)
 	rows := migration.DbPool.QueryRow(context.Background(), "select * from floors where id = $1", floorId)
 	err := rows.Scan(&floor.Id, &floor.Name, &floor.TotalWorkSpace, &floor.TotalConference, &floor.BuildingId, &floor.CreatedAt, &floor.UpdatedAt)
+	allFloorWorkspaces := GetAllworkspaces(floor.Id)
+	floor.FloorWorkSpaces = allFloorWorkspaces
 	if err != nil {
 		fmt.Println("Failed to get floors record :", err)
 		return Floor{}
